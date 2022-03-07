@@ -1,0 +1,11 @@
+% long01
+% StartDate: 2010-01-01
+% EndDate: 2010-01-28
+numDays = 28
+Skills = {Nurse, HeadNurse}
+E = {Nurse}
+L = {Nurse}
+D = {Nurse}
+N = {Nurse}
+DH = {HeadNurse}
+ShiftTypes = {E, L, D, N, DH}
