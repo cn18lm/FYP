@@ -10,18 +10,21 @@ tree = ET.parse('data/instances/long/long/long01.xml')
 root = tree.getroot()
 
 
-
 """ USEFUL FUNCTIONS """
+
 
 def to_date(d):
     return datetime.strptime(d, '%Y-%m-%d').date()
 
+
 def write_comment(c):
     f.write("% " + c + "\n")
-    
+
+
 def write_var(v1, v2):
     f.write(v1 + " = " + str(v2) + "\n")
-    
+
+
 def write_set(n, a):
     f.write(n + " = {")
     first = True
@@ -31,13 +34,15 @@ def write_set(n, a):
             f.write(str(item))
         else:
             f.write(", " + str(item))
-    
+
     f.write("}\n")
+
 
 def dayStrToInt(d):
     return week_days.index(d)
 
-def writeCalendar(n,a):
+
+def writeCalendar(n, a):
     f.write(n + " = [|")
     for i in a:
         first = True
@@ -50,8 +55,6 @@ def writeCalendar(n,a):
         f.write(" |")
     f.write("] \n")
 
-    
-
 
 """ PARSING XML DATA """
 
@@ -62,47 +65,47 @@ f = open(filename, "w")
 
 
 for child in root:
-  print(child.tag,child.attrib)
+    print(child.tag, child.attrib)
 
-#SchedulingPeriod
+# SchedulingPeriod
 write_comment(SchedulingPeriod)
 
-#StartDate
+# StartDate
 StartDate = to_date(root.find('StartDate').text)
 write_comment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
 
-#EndDate
+# EndDate
 EndDate = to_date(root.find('EndDate').text)
 write_comment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
 
-#Starting day,  monday = 0 
+# Starting day,  monday = 0
 firstDay = StartDate.weekday()
-write_var("firstDay",firstDay)
+write_var("firstDay", firstDay)
 
-#numDays
+# numDays
 delta = EndDate - StartDate
 numDays = delta.days + 1
 write_var("numDays", numDays)
 
-#Skills
+# Skills
 Skills = []
 for child in root.find('Skills'):
-  Skills.append(child.text)
+    Skills.append(child.text)
 write_set("Skills", Skills)
 
-#ShiftTypes
+# ShiftTypes
 ShiftTypes = []
 
 for child in root.find('ShiftTypes'):
-  name = child.attrib["ID"]
-  ShiftTypes.append(name)
-  arr = []
-  for skill in child.find('Skills'):
-      arr.append(skill.text)
-  write_set(name, arr)
+    name = child.attrib["ID"]
+    ShiftTypes.append(name)
+    arr = []
+    for skill in child.find('Skills'):
+        arr.append(skill.text)
+    write_set(name, arr)
 write_set("ShiftTypes", ShiftTypes)
 
-#CoverRequirements
+# CoverRequirements
 week = week_days.copy()
 for x in root.find('CoverRequirements'):
     if x.tag == 'DayOfWeekCover':
@@ -116,7 +119,7 @@ for x in root.find('CoverRequirements'):
 big = []
 
 for i in range(numDays):
-    big.append(week[(firstDay + i)%7])
+    big.append(week[(firstDay + i) % 7])
 
 writeCalendar("CoverRequirements", big)
 
