@@ -1,30 +1,28 @@
-#replace root[n] with search for specific child?
 import calendar
-daysOfWeek = list(calendar.day_name)
 
 from datetime import datetime
 
 import xml.etree.ElementTree as ET
+
+week_days = list(calendar.day_name)
+
 tree = ET.parse('data/instances/long/long/long01.xml')
 root = tree.getroot()
 
-SchedulingPeriod = root.attrib["ID"]
-filename = SchedulingPeriod + ".dzn"
 
-f = open(filename, "w")
 
-# Useful functions
+""" USEFUL FUNCTIONS """
 
-def toDate(d):
-  return datetime.strptime(d, '%Y-%m-%d').date()
+def to_date(d):
+    return datetime.strptime(d, '%Y-%m-%d').date()
 
-def writeComment(c):
+def write_comment(c):
     f.write("% " + c + "\n")
     
-def writeVar(v1, v2):
+def write_var(v1, v2):
     f.write(v1 + " = " + str(v2) + "\n")
     
-def writeSet(n, a):
+def write_set(n, a):
     f.write(n + " = {")
     first = True
     for item in a:
@@ -37,7 +35,7 @@ def writeSet(n, a):
     f.write("}\n")
 
 def dayStrToInt(d):
-    return daysOfWeek.index(d)
+    return week_days.index(d)
 
 def writeCalendar(n,a):
     f.write(n + " = [|")
@@ -51,36 +49,46 @@ def writeCalendar(n,a):
                 f.write(", " + j)
         f.write(" |")
     f.write("] \n")
-            
+
+    
+
+
+""" PARSING XML DATA """
+
+SchedulingPeriod = root.attrib["ID"]
+filename = SchedulingPeriod + ".dzn"
+
+f = open(filename, "w")
+
 
 for child in root:
   print(child.tag,child.attrib)
 
 #SchedulingPeriod
-writeComment(SchedulingPeriod)
+write_comment(SchedulingPeriod)
 
 #StartDate
-StartDate = toDate(root.find('StartDate').text)
-writeComment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
+StartDate = to_date(root.find('StartDate').text)
+write_comment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
 
 #EndDate
-EndDate = toDate(root.find('EndDate').text)
-writeComment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
+EndDate = to_date(root.find('EndDate').text)
+write_comment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
 
 #Starting day,  monday = 0 
 firstDay = StartDate.weekday()
-writeVar("firstDay",firstDay)
+write_var("firstDay",firstDay)
 
 #numDays
 delta = EndDate - StartDate
 numDays = delta.days + 1
-writeVar("numDays", numDays)
+write_var("numDays", numDays)
 
 #Skills
 Skills = []
 for child in root.find('Skills'):
   Skills.append(child.text)
-writeSet("Skills", Skills)
+write_set("Skills", Skills)
 
 #ShiftTypes
 ShiftTypes = []
@@ -91,18 +99,18 @@ for child in root.find('ShiftTypes'):
   arr = []
   for skill in child.find('Skills'):
       arr.append(skill.text)
-  writeSet(name, arr)
-writeSet("ShiftTypes", ShiftTypes)
+  write_set(name, arr)
+write_set("ShiftTypes", ShiftTypes)
 
 #CoverRequirements
-week = daysOfWeek.copy()
+week = week_days.copy()
 for x in root.find('CoverRequirements'):
     if x.tag == 'DayOfWeekCover':
         day = ShiftTypes.copy()
         for y in x.findall('Cover'):
             index = ShiftTypes.index(y[0].text)
             day[index] = y[1].text
-        index = daysOfWeek.index(x[0].text)
+        index = week_days.index(x[0].text)
         week[index] = day
 
 big = []
