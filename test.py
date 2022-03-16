@@ -60,32 +60,34 @@ def writeCalendar(n, a):
 
 SchedulingPeriod = root.attrib["ID"]
 filename = SchedulingPeriod + ".dzn"
-
 f = open(filename, "w")
 
+StartDate = to_date(root.find('StartDate').text)
+EndDate = to_date(root.find('EndDate').text)
+
+delta = EndDate - StartDate
+num_days = delta.days + 1
 
 for child in root:
     print(child.tag, child.attrib)
 
+
 # SchedulingPeriod
-write_comment(SchedulingPeriod)
+def scheduling_period():
+    write_comment(SchedulingPeriod)
+
 
 # StartDate
-StartDate = to_date(root.find('StartDate').text)
-write_comment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
-
-# EndDate
-EndDate = to_date(root.find('EndDate').text)
-write_comment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
-
+def dates():
+    
+    write_comment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
+    
+    write_comment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
+      
+    write_var("num_days", num_days)
+    
 # Starting day,  monday = 0
-firstDay = StartDate.weekday()
-write_var("firstDay", firstDay)
 
-# numDays
-delta = EndDate - StartDate
-numDays = delta.days + 1
-write_var("numDays", numDays)
 
 # Skills
 Skills = []
@@ -118,7 +120,8 @@ for x in root.find('CoverRequirements'):
 
 big = []
 
-for i in range(numDays):
+firstDay = StartDate.weekday()
+for i in range(num_days):
     big.append(week[(firstDay + i) % 7])
 
 writeCalendar("CoverRequirements", big)
