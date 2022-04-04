@@ -126,4 +126,18 @@ for i in range(num_days):
 
 writeCalendar("CoverRequirements", big)
 
+
+def unwanted_patterns():
+    
+    for pattern in root.find('Patterns'):
+        print(pattern.attrib['ID'])
+    
+    
+    
+    
+unwanted_patterns()   
+    
+    
+    
+    
 f.close()

@@ -1,8 +1,3 @@
-% long01
-% StartDate: 2010-01-01
-% EndDate: 2010-01-28
-firstDay = 4
-numDays = 28
 Skills = {Nurse, HeadNurse}
 E = {Nurse}
 L = {Nurse}
