@@ -153,13 +153,8 @@ def unwanted_patterns():
             
             index = int(q.attrib['index'])
             indices.append(index)
-        
+            
         delta = []
-
-        for i in indices:
-            for k in range(7):
-                delta.append([(k+1)%7 + i * 7 + 1]*(len(ShiftTypes)))
-        print(delta)
         
         
         for q in p.find('PatternEntries'):
@@ -197,18 +192,32 @@ def unwanted_patterns():
             # otherwise set array to be integer of day
             else:
                 day_array = [dayStrToInt(day)]
-            
-            # add on week to day
-            day_array = [x + 7 * index for x in day_array]
+
             print ('   Day = ' + day)
             print(day_array)
             
+            delta_part = []
+            for i in range(7):
+                row = []
+                for j in range(len(ShiftTypes) + 1):
+                    row.append((i+1) % 7 + 1)
+                delta_part.append(row)
             
-            for i in day_array:
-                for j in shift_array:
-                    delta[i][j] = (i+1)%7 + 7 * (index + 1)
+            # if we are on last index, send any matches to the fail state
+            if index == indices[-1]:
+                for i in day_array:
+                    for j in shift_array:
+                        delta_part[i][j] = 0 
+            
+            else:
+                for i in day_array:
+                    for j in shift_array:
+                        delta_part[i][j] = (i+1) % 7 + 1 + (7 * (index+1))
+            
+            #print(delta_part)
+            delta = delta + delta_part
  
-            
+        print(delta)
         print('.....')
 
     
