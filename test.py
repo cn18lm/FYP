@@ -21,14 +21,14 @@ def write_comment(c):
     f.write("% " + c + "\n")
 
 
-def write_var(v1, v2):
-    f.write(v1 + " = " + str(v2) + "\n")
+def write_var(name, value):
+    f.write(name + " = " + str(value) + "\n")
 
 
-def write_set(n, a):
-    f.write(n + " = {")
+def write_set(name, list_):
+    f.write(name + " = {")
     first = True
-    for item in a:
+    for item in list_:
         if first:
             first = False
             f.write(str(item))
@@ -38,13 +38,13 @@ def write_set(n, a):
     f.write("}\n")
 
 
-def dayStrToInt(d):
+def day_string_to_int(d):
     return week_days.index(d)
 
 
-def writeCalendar(n, a):
-    f.write(n + " = [|")
-    for i in a:
+def write_2D_array(name, list_):
+    f.write(name + " = [|")
+    for i in list_:
         first = True
         for j in i:
             if first:
@@ -138,7 +138,7 @@ def cover_requirements():
     for i in range(NUM_DAYS):
         big.append(week[(firstDay + i) % 7])
 
-    writeCalendar("CoverRequirements", big)
+    write_2D_array("CoverRequirements", big)
 
 
 
@@ -187,7 +187,7 @@ def unwanted_patterns():
                 
             # otherwise set array to be integer of day
             else:
-                day_array = [dayStrToInt(day)]
+                day_array = [day_string_to_int(day)]
 
             
             delta_part = []
