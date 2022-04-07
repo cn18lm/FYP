@@ -58,8 +58,8 @@ def writeCalendar(n, a):
 
 """ ------------------ PARSING XML DATA ------------------ """
 
-SchedulingPeriod = root.attrib["ID"]
-filename = SchedulingPeriod + ".dzn"
+SCHEDULING_PERIOD = root.attrib["ID"]
+filename = SCHEDULING_PERIOD + ".dzn"
 f = open(filename, "w")
 
 
@@ -69,55 +69,55 @@ for child in root:
 
 
 """ ------------------ GLOBAL VARIABLES ------------------ """
-StartDate = None
-EndDate = None
-num_days = None
+START_DATE = None
+END_DATE = None
+NUM_DAYS = None
 
-Skills = []
-ShiftTypes = []
+SKILLS = []
+SHIFT_TYPES = []
 
 
 def scheduling_period():
-    write_comment(SchedulingPeriod)
+    write_comment(SCHEDULING_PERIOD)
 
 
 
 def dates():
-    global StartDate
-    global EndDate
-    global num_days
+    global START_DATE
+    global END_DATE
+    global NUM_DAYS
     
-    StartDate = to_date(root.find('StartDate').text)
-    EndDate = to_date(root.find('EndDate').text)
-    delta = EndDate - StartDate
-    num_days = delta.days + 1
+    START_DATE = to_date(root.find('StartDate').text)
+    END_DATE = to_date(root.find('EndDate').text)
+    delta = END_DATE - START_DATE
+    NUM_DAYS = delta.days + 1
 
     
-    write_comment("StartDate: " + StartDate.strftime('%Y-%m-%d'))
+    write_comment("START_DATE: " + START_DATE.strftime('%Y-%m-%d'))
     
-    write_comment("EndDate: " + EndDate.strftime('%Y-%m-%d'))
+    write_comment("END_DATE: " + END_DATE.strftime('%Y-%m-%d'))
       
-    write_var("num_days", num_days)
+    write_var("NUM_DAYS", NUM_DAYS)
 
 
 def skills():
-    global Skills
+    global SKILLS
     for child in root.find('Skills'):
-        Skills.append(child.text)
-    write_set("Skills", Skills)
+        SKILLS.append(child.text)
+    write_set("SKILLS", SKILLS)
 
 
 
 def shift_types():
-    global ShiftTypes
+    global SHIFT_TYPES
     for child in root.find('ShiftTypes'):
         name = child.attrib["ID"]
-        ShiftTypes.append(name)
+        SHIFT_TYPES.append(name)
         arr = []
         for skill in child.find('Skills'):
             arr.append(skill.text)
         write_set(name, arr)
-    write_set("ShiftTypes", ShiftTypes)
+    write_set("SHIFT_TYPES", SHIFT_TYPES)
 
 
 
@@ -125,17 +125,17 @@ def cover_requirements():
     week = week_days.copy()
     for x in root.find('CoverRequirements'):
         if x.tag == 'DayOfWeekCover':
-            day = ShiftTypes.copy()
+            day = SHIFT_TYPES.copy()
             for y in x.findall('Cover'):
-                index = ShiftTypes.index(y[0].text)
+                index = SHIFT_TYPES.index(y[0].text)
                 day[index] = y[1].text
             index = week_days.index(x[0].text)
             week[index] = day
 
     big = []
 
-    firstDay = StartDate.weekday()
-    for i in range(num_days):
+    firstDay = START_DATE.weekday()
+    for i in range(NUM_DAYS):
         big.append(week[(firstDay + i) % 7])
 
     writeCalendar("CoverRequirements", big)
@@ -161,26 +161,22 @@ def unwanted_patterns():
             
             index = int(q.attrib['index'])
             
-            print('Pattern index = ' + str(index))
-            
             # Shift types
             shift = q.find('ShiftType').text
             
             
             # if any shift type is any, set array to all shifts
             if shift == 'Any':
-                shift_array = [*range(len(ShiftTypes))]
+                shift_array = [*range(len(SHIFT_TYPES))]
             
             # if shift type is none, set array to be off shift 
             elif shift == 'None':
-                shift_array = [len(ShiftTypes)]
+                shift_array = [len(SHIFT_TYPES)]
             
             else:
-                shift_array = [ShiftTypes.index(shift)]
+                shift_array = [SHIFT_TYPES.index(shift)]
             
-            print ('   Shift type = ' + shift)
-            print(shift_array)
-            
+
             # Days
             day = q.find('Day').text
             day_array = []
@@ -193,13 +189,11 @@ def unwanted_patterns():
             else:
                 day_array = [dayStrToInt(day)]
 
-            print ('   Day = ' + day)
-            print(day_array)
             
             delta_part = []
             for i in range(7):
                 row = []
-                for j in range(len(ShiftTypes) + 1):
+                for j in range(len(SHIFT_TYPES) + 1):
                     row.append((i+1) % 7 + 1)
                 delta_part.append(row)
             
@@ -214,7 +208,6 @@ def unwanted_patterns():
                     for j in shift_array:
                         delta_part[i][j] = (i+1) % 7 + 1 + (7 * (index+1))
             
-            #print(delta_part)
             delta = delta + delta_part
  
         print(delta)
