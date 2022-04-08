@@ -10,6 +10,9 @@ N = {Nurse}
 DH = {HeadNurse}
 shift_types = {E, L, D, N, DH, ZZ}
 num_shifts = 6
+num_employees = 49
+employee_contracts = [0, 0, 1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+employee_skills = [{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse}]
 CoverRequirements = [
 | 8, 8, 5, 6, 2
 | 6, 6, 3, 4, 1
@@ -39,8 +42,7 @@ CoverRequirements = [
 | 8, 8, 5, 6, 2
 | 8, 8, 5, 6, 2
 | 8, 8, 5, 6, 2
-| ] 
-employee_contracts = [0, 0, 1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+|] 
 delta0 = [
 | 2, 9, 2, 2, 2, 2
 | 3, 10, 3, 3, 3, 3
@@ -56,7 +58,7 @@ delta0 = [
 | 6, 6, 0, 6, 6, 6
 | 7, 7, 0, 7, 7, 7
 | 1, 1, 0, 1, 1, 1
-| ] 
+|] 
 delta1 = [
 | 2, 2, 9, 2, 2, 2
 | 3, 3, 10, 3, 3, 3
@@ -79,7 +81,7 @@ delta1 = [
 | 6, 6, 0, 6, 6, 6
 | 7, 7, 0, 7, 7, 7
 | 1, 1, 0, 1, 1, 1
-| ] 
+|] 
 delta2 = [
 | 2, 2, 2, 2, 2, 2
 | 3, 3, 3, 3, 3, 3
@@ -102,4 +104,4 @@ delta2 = [
 | 6, 6, 6, 6, 6, 6
 | 7, 7, 7, 7, 7, 7
 | 0, 0, 0, 0, 0, 1
-| ] 
+|] 

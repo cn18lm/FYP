@@ -37,14 +37,46 @@ def write_set(name, list_):
 
     f.write("}\n")
 
+def write_array(name, list_):
+    f.write(name + " = [")
+    first = True
+    for item in list_:
+        if first:
+            first = False
+            f.write(str(item))
+        else:
+            f.write(", " + str(item))
+
+    f.write("]\n")
+    
 
 def day_string_to_int(d):
     return week_days.index(d)
 
 
 def write_2D_array(name, list_):
-    f.write(name + " = [\n| ")
+    f.write(name + " = [\n|")
     for i in list_:
+        first = True
+        for j in i:
+            if first:
+                f.write(" " + str(j))
+                first = False
+            else:
+                f.write(", " + str(j))
+        f.write("\n|")
+    f.write("] \n")
+
+
+def write_array_of_sets(name, list_):
+    f.write(name + " = [")
+    firstfirst = True
+    for i in list_:
+        if firstfirst:
+            f.write("{")
+            firstfirst = False
+        else:
+            f.write(",{")
         first = True
         for j in i:
             if first:
@@ -52,8 +84,8 @@ def write_2D_array(name, list_):
                 first = False
             else:
                 f.write(", " + str(j))
-        f.write("\n| ")
-    f.write("] \n")
+        f.write("}")
+    f.write("]\n")
 
 
 """ ------------------ PARSING XML DATA ------------------ """
@@ -61,10 +93,6 @@ def write_2D_array(name, list_):
 SCHEDULING_PERIOD = root.attrib["ID"]
 filename = SCHEDULING_PERIOD + ".dzn"
 f = open(filename, "w")
-
-
-for child in root:
-    print(child.tag, child.attrib)
 
 
 """ ------------------ GLOBAL VARIABLES ------------------ """
@@ -76,7 +104,8 @@ SKILLS = []
 SHIFT_TYPES = []
 OFF_SHIFT = 'ZZ'
 
-CONTRACT_ARRAY = []
+EMPLOYEE_CONTRACTS = []
+EMPLOYEE_SKILLS = []
 
 
 def scheduling_period():
@@ -107,6 +136,7 @@ def skills():
     write_set("skills", SKILLS)
 
 
+
 def shift_types():
     global SHIFT_TYPES
     for child in root.find('ShiftTypes'):
@@ -117,13 +147,42 @@ def shift_types():
             arr.append(skill.text)
         write_set(name, arr)
         
-    # Z represents no shift
+    # ZZ represents no shift
     SHIFT_TYPES.append(OFF_SHIFT)
     
     write_set("shift_types", SHIFT_TYPES)
     
     write_var('num_shifts', len(SHIFT_TYPES))
 
+
+
+def employee_contracts():
+    
+    global EMPLOYEE_CONTRACTS
+    
+    for e in root.find('Employees'):
+        contract = e.find('ContractID').text
+        EMPLOYEE_CONTRACTS.append(contract)
+        
+    write_var('num_employees', len(EMPLOYEE_CONTRACTS))
+    
+    write_array('employee_contracts', EMPLOYEE_CONTRACTS)
+    
+
+def employee_skills():
+    
+    global EMPLOYEE_SKILLS
+    
+    for e in root.find('Employees'): 
+        theirskills = []
+        for s in e.find('Skills'):
+            theirskills.append(s.text)
+        EMPLOYEE_SKILLS.append(theirskills)
+    
+    print(EMPLOYEE_SKILLS)
+    write_array_of_sets('employee_skills', EMPLOYEE_SKILLS)
+    
+    
 
 def cover_requirements():
     week = week_days.copy()
@@ -144,17 +203,6 @@ def cover_requirements():
 
     write_2D_array("CoverRequirements", big)
 
-def employee_contracts():
-    
-    global CONTRACT_ARRAY
-    
-    for e in root.find('Employees'):
-        print(e.attrib['ID'])
-        contract = e.find('ContractID').text
-        CONTRACT_ARRAY.append(contract)
-        
-    print('...')
-    print( CONTRACT_ARRAY)
 
 def unwanted_patterns():
 
@@ -173,7 +221,7 @@ def unwanted_patterns():
 
             index = int(q.attrib['index'])
 
-            # Shift types
+            #----- Shift types -----
             shift = q.find('ShiftType').text
             
             # 'None' means off shift, represented by 'ZZ'
@@ -187,7 +235,7 @@ def unwanted_patterns():
             else:
                 shift_array = [SHIFT_TYPES.index(shift)]
 
-            # Days
+            #----- Days ------
             day = q.find('Day').text
             day_array = []
 
@@ -199,6 +247,7 @@ def unwanted_patterns():
             else:
                 day_array = [day_string_to_int(day)]
 
+            # ----- creating transition function table -----
             delta_part = []
             for i in range(7):
                 row = []
@@ -229,8 +278,9 @@ def main():
     dates()
     skills()
     shift_types()
-    cover_requirements()
     employee_contracts()
+    employee_skills()
+    cover_requirements()
     unwanted_patterns()
 
 
