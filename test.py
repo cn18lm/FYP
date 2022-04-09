@@ -296,9 +296,19 @@ def define_contracts():
         m = contract.find('MinNumAssignments').text
         min_num_assignments.append(m)
         
+        # Weekend is defined in contract by a string of days
         wknd = contract.find('WeekendDefinition')
-        weekend_pair = re.sub( r"([A-Z])", r" \1", wknd.text).split()
-        print(weekend_pair)
+        
+        # using regex to split up string into individual days 
+        # each new day starts with uppercase character
+        # regex inserts space before every uppercase character
+        # then string is split with space as delimiter        
+        weekend_list = re.sub( r"([A-Z])", r" \1", wknd.text).split()
+        
+        #converting days to their index in the week
+        weekend_list_int = [day_string_to_int(i) for i in weekend_list]
+        print(weekend_list)
+        print(weekend_list_int)
     
     write_array('max_num_assignments', max_num_assignments)
     write_array('min_num_assignments', min_num_assignments)
