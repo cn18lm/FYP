@@ -103,6 +103,7 @@ NUM_DAYS = None
 SKILLS = []
 SHIFT_TYPES = []
 OFF_SHIFT = 'ZZ'
+SHIFT_SKILLS = []
 
 EMPLOYEE_CONTRACTS = []
 EMPLOYEE_SKILLS = []
@@ -139,20 +140,26 @@ def skills():
 
 def shift_types():
     global SHIFT_TYPES
+    global SHIFT_SKILLS
+    
     for child in root.find('ShiftTypes'):
         name = child.attrib["ID"]
         SHIFT_TYPES.append(name)
-        arr = []
+        s = []
         for skill in child.find('Skills'):
-            arr.append(skill.text)
-        write_set(name, arr)
-        
-    # ZZ represents no shift
-    SHIFT_TYPES.append(OFF_SHIFT)
+            s.append(skill.text)
+        SHIFT_SKILLS.append(s)
     
-    write_set("shift_types", SHIFT_TYPES)
+    
+    
+    # ZZ represents no shift (which accepts any skill)
+    SHIFT_TYPES.append(OFF_SHIFT)
+    SHIFT_SKILLS.append(SKILLS)
     
     write_var('num_shifts', len(SHIFT_TYPES))
+    write_set("shift_types", SHIFT_TYPES)
+    write_array_of_sets("shift_skills", SHIFT_SKILLS)
+    
 
 
 

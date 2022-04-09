@@ -3,13 +3,9 @@
 % END_DATE: 2010-01-28
 num_days = 28
 skills = {Nurse, HeadNurse}
-E = {Nurse}
-L = {Nurse}
-D = {Nurse}
-N = {Nurse}
-DH = {HeadNurse}
-shift_types = {E, L, D, N, DH, ZZ}
 num_shifts = 6
+shift_types = {E, L, D, N, DH, ZZ}
+shift_skills = [{Nurse},{Nurse},{Nurse},{Nurse},{HeadNurse},{Nurse, HeadNurse}]
 num_employees = 49
 employee_contracts = [0, 0, 1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 employee_skills = [{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse, HeadNurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse},{Nurse}]
