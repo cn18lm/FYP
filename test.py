@@ -104,6 +104,7 @@ SKILLS = []
 SHIFT_TYPES = []
 OFF_SHIFT = 'ZZ'
 SHIFT_SKILLS = []
+NUM_SHIFTS = []
 
 EMPLOYEE_CONTRACTS = []
 EMPLOYEE_SKILLS = []
@@ -141,6 +142,7 @@ def skills():
 def shift_types():
     global SHIFT_TYPES
     global SHIFT_SKILLS
+    global NUM_SHIFTS
     
     for child in root.find('ShiftTypes'):
         name = child.attrib["ID"]
@@ -155,8 +157,9 @@ def shift_types():
     # ZZ represents no shift (which accepts any skill)
     SHIFT_TYPES.append(OFF_SHIFT)
     SHIFT_SKILLS.append(SKILLS)
+    NUM_SHIFTS = len(SHIFT_TYPES)
     
-    write_var('num_shifts', len(SHIFT_TYPES))
+    write_var('num_shifts', NUM_SHIFTS)
     write_set("shift_types", SHIFT_TYPES)
     write_array_of_sets("shift_skills", SHIFT_SKILLS)
     
@@ -295,7 +298,77 @@ def define_contracts():
     print(max_num_assignments)
     print(min_num_assignments)
         
+def max_working_consecutive_delta(m_):
+    delta = []
+    for i in range(NUM_DAYS):
+        row = []
+        if i + 1 == m_ + 1 :
+            for j in range(NUM_SHIFTS-1):
+                row.append(0)
+            row.append(1)
+        else:
+            for j in range(NUM_SHIFTS-1):
+                row.append(i+2)
+            row.append(1)        
+        delta.append(row)
     
+    print(delta)
+
+def min_working_consecutive_delta(m_):
+    delta = []
+    for i in range(NUM_DAYS):
+        row = []
+        if i + 1 == 1:
+            for j in range(NUM_SHIFTS-1):
+                row.append(i+2)
+            row.append(i+1)
+        elif i == m_ :
+            for j in range(NUM_SHIFTS-1):
+                row.append(i+1)
+            row.append(1)
+        else:
+            for j in range(NUM_SHIFTS-1):
+                row.append(i+2)
+            row.append(0)        
+        delta.append(row)
+    
+    print(delta)
+    
+def max_free_consecutive_delta(m_):
+    delta = []
+    for i in range(NUM_DAYS):
+        row = []
+        if i + 1 == m_ + 1 :
+            for j in range(NUM_SHIFTS-1):
+                row.append(1)
+            row.append(0)
+        else:
+            for j in range(NUM_SHIFTS-1):
+                row.append(1)
+            row.append(i+2)        
+        delta.append(row)
+    
+    print(delta)
+
+def min_free_consecutive_delta(m_):
+    delta = []
+    for i in range(NUM_DAYS):
+        row = []
+        if i + 1 == 1:
+            for j in range(NUM_SHIFTS-1):
+                row.append(i+1)
+            row.append(i+2)
+        elif i == m_ :
+            for j in range(NUM_SHIFTS-1):
+                row.append(1)
+            row.append(i+1)
+        else:
+            for j in range(NUM_SHIFTS-1):
+                row.append(0)
+            row.append(i+2)        
+        delta.append(row)
+    
+    print(delta)
 
 def main():
     scheduling_period()
