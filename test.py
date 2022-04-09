@@ -169,7 +169,7 @@ def employee_contracts():
     
     for e in root.find('Employees'):
         contract = e.find('ContractID').text
-        EMPLOYEE_CONTRACTS.append(contract)
+        EMPLOYEE_CONTRACTS.append(int(contract)+1) # Adding 1 to make indices work
         
     write_var('num_employees', len(EMPLOYEE_CONTRACTS))
     
@@ -186,12 +186,12 @@ def employee_skills():
             theirskills.append(s.text)
         EMPLOYEE_SKILLS.append(theirskills)
     
-    print(EMPLOYEE_SKILLS)
     write_array_of_sets('employee_skills', EMPLOYEE_SKILLS)
     
     
 
 def cover_requirements():
+    # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
     week = week_days.copy()
     for x in root.find('CoverRequirements'):
         if x.tag == 'DayOfWeekCover':
@@ -279,6 +279,23 @@ def unwanted_patterns():
         write_2D_array('delta'+ID , delta)
 
 
+def define_contracts():
+    max_num_assignments = []
+    min_num_assignments = []
+    for contract in root.find('Contracts'):
+        
+        print(contract.attrib['ID'])
+        
+        # MaxNumAssignments
+        m = contract.find('MaxNumAssignments')
+        max_num_assignments.append(m.text)
+        
+        m = contract.find('MinNumAssignments')
+        min_num_assignments.append(m.text)
+    print(max_num_assignments)
+    print(min_num_assignments)
+        
+    
 
 def main():
     scheduling_period()
@@ -289,6 +306,7 @@ def main():
     employee_skills()
     cover_requirements()
     unwanted_patterns()
+    define_contracts()
 
 
 main()
