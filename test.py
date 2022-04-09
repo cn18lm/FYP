@@ -4,6 +4,8 @@ from datetime import datetime
 
 import xml.etree.ElementTree as ET
 
+import re
+
 week_days = list(calendar.day_name)
 
 tree = ET.parse('data/instances/long/long/long01.xml')
@@ -286,17 +288,20 @@ def define_contracts():
     max_num_assignments = []
     min_num_assignments = []
     for contract in root.find('Contracts'):
-        
-        print(contract.attrib['ID'])
-        
+               
         # MaxNumAssignments
-        m = contract.find('MaxNumAssignments')
-        max_num_assignments.append(m.text)
+        m = contract.find('MaxNumAssignments').text
+        max_num_assignments.append(m)
         
-        m = contract.find('MinNumAssignments')
-        min_num_assignments.append(m.text)
-    print(max_num_assignments)
-    print(min_num_assignments)
+        m = contract.find('MinNumAssignments').text
+        min_num_assignments.append(m)
+        
+        wknd = contract.find('WeekendDefinition')
+        weekend_pair = re.sub( r"([A-Z])", r" \1", wknd.text).split()
+        print(weekend_pair)
+    
+    write_array('max_num_assignments', max_num_assignments)
+    write_array('min_num_assignments', min_num_assignments)
         
 def max_working_consecutive_delta(m_):
     delta = []
@@ -369,6 +374,12 @@ def min_free_consecutive_delta(m_):
         delta.append(row)
     
     print(delta)
+    
+def max_weekends_consecutive_delta(m_):
+    None
+
+def min_weekends_consecutive_delta(m_):
+    None
 
 def main():
     scheduling_period()
@@ -377,10 +388,9 @@ def main():
     shift_types()
     employee_contracts()
     employee_skills()
-    cover_requirements()
-    unwanted_patterns()
     define_contracts()
-
+    unwanted_patterns()
+    cover_requirements()
 
 main()
 
