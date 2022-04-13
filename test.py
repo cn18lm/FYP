@@ -19,6 +19,16 @@ def to_date(d):
     return datetime.strptime(d, '%Y-%m-%d').date()
 
 
+def day_index_to_weekday(i):
+    """
+    takes the index of a day and returns what day of the week it is, as an int
+    
+    """
+    firstDay = START_DATE.weekday()
+    
+    return((firstDay + i) % 7)
+
+
 def write_comment(c):
     f.write("% " + c + "\n")
 
@@ -288,6 +298,7 @@ def define_contracts():
     max_num_assignments = []
     min_num_assignments = []
     for contract in root.find('Contracts'):
+        ID = int(contract.attrib['ID'])+1
                
         # MaxNumAssignments
         m = contract.find('MaxNumAssignments').text
@@ -309,6 +320,17 @@ def define_contracts():
         weekend_list_int = [day_string_to_int(i) for i in weekend_list]
         print(weekend_list)
         print(weekend_list_int)
+        
+        weekend_indices = []
+        for i in range(NUM_DAYS):
+            if day_index_to_weekday(i) in weekend_list_int:
+                weekend_indices.append(i)
+        
+        print(weekend_indices)
+        
+        weekend_indices_mz = [x+1 for x in weekend_indices]
+        name = "weekend_c" + str(ID)
+        write_array(name, weekend_indices_mz)
     
     write_array('max_num_assignments', max_num_assignments)
     write_array('min_num_assignments', min_num_assignments)
