@@ -256,8 +256,7 @@ def cover_requirements():
 
 def unwanted_patterns():
     all_delta = []
-    adindices = []
-    first = True
+
 
     for p in root.find('Patterns'):
         ID = p.attrib['ID']
@@ -321,26 +320,12 @@ def unwanted_patterns():
                         delta_part[i][j] = (i+1) % 7 + 1 + (7 * (index+1))
 
             delta = delta + delta_part
-
-        #write_2D_array('delta'+ID , delta)
-        indexrow = []
-        if first:
-            indexrow.append(1)
-            first = False
-        else:
-            indexrow.append(adindices[-1][-1] + 1)
         
-        indexrow.append(indexrow[-1] - 1 + len(delta))
-        
-        adindices.append(indexrow)
-        
-        all_delta = all_delta + delta
-        print(len(delta))
+        all_delta.append(delta)
     
-    print(len(all_delta))
-    print(adindices)
+    combined, adindices = combine_lists(all_delta)
     write_2D_array('unwanted_patterns' , adindices)
-    write_2D_array('unwanted_patterns_delta' , all_delta)
+    write_2D_array('unwanted_patterns_delta' , combined)
 
 
 def define_contracts():
