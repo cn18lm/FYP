@@ -98,6 +98,34 @@ def write_array_of_sets(name, list_):
                 f.write(", " + str(j))
         f.write("}")
     f.write("]\n")
+    
+
+def combine_lists(list_):
+    """
+    Takes a list containing 2d lists of same row length, and joins them into 
+    one list which is returned along with the indices (for minizinc) to access
+    each list
+    """
+    combined = []
+    indices = []
+    
+    first = True
+    
+    for l in list_:
+        combined = combined + l
+        indexrow = []
+        if first:
+            indexrow.append(1)
+            first = False
+        else:
+            indexrow.append(indices[-1][-1] + 1)
+        
+        indexrow.append(indexrow[-1] - 1 + len(l))
+        
+        indices.append(indexrow)
+        
+    return combined, indices
+            
 
 
 """ ------------------ PARSING XML DATA ------------------ """
