@@ -28,6 +28,12 @@ def day_index_to_weekday(i):
     
     return((firstDay + i) % 7)
 
+def date_to_index(d):
+    """
+    takes a date object and returns the index of that day
+    """
+    delta = d - START_DATE
+    return delta.days
 
 def write_comment(c):
     f.write("% " + c + "\n")
@@ -254,6 +260,14 @@ def cover_requirements():
             for i in range(NUM_DAYS):
                 if day_index_to_weekday(i) == day:
                     total[i] = shifts
+        
+        if x.tag == 'DateSpecificCover':
+            
+            d = x.find('Date').text
+            date = to_date(d)
+            index = date_to_index(date)
+            
+            
     
     write_2D_array("CoverRequirements", total)
 
@@ -263,7 +277,7 @@ def unwanted_patterns():
 
 
     for p in root.find('Patterns'):
-        ID = p.attrib['ID']
+        #ID = p.attrib['ID']
         indices = []
 
         for q in p.find('PatternEntries'):
