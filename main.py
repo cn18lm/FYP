@@ -231,49 +231,31 @@ def employee_skills():
     
     write_array_of_sets('employee_skills', EMPLOYEE_SKILLS)
     
-    
 
 def cover_requirements():
     # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
-    week = week_days.copy()
-    for x in root.find('CoverRequirements'):
-        if x.tag == 'DayOfWeekCover':
-            day = SHIFT_TYPES[0:-1]
-            for y in x.findall('Cover'):
-                index = SHIFT_TYPES.index(y[0].text)
-                day[index] = y[1].text
-            index = week_days.index(x[0].text)
-            week[index] = day
-
-    big = []
-
-    firstDay = START_DATE.weekday()
-    for i in range(NUM_DAYS):
-        big.append(week[(firstDay + i) % 7])
-
-    write_2D_array("CoverRequirements", big)
     
-def cover_requirements2():
-    # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
-    week = week_days.copy()
-    total = [[0]*NUM_DAYS]*(NUM_SHIFTS - 1)
+    total = [[0]*(NUM_SHIFTS - 1)]*NUM_DAYS
+    
     for x in root.find('CoverRequirements'):
+        
         if x.tag == 'DayOfWeekCover':
-            day = SHIFT_TYPES[0:-1]
-            for y in x.findall('Cover'):
-                index = SHIFT_TYPES.index(y[0].text)
-                day[index] = y[1].text
-            index = week_days.index(x[0].text)
-            week[index] = day
-
-    big = []
-
-    firstDay = START_DATE.weekday()
-    for i in range(NUM_DAYS):
-        big.append(week[(firstDay + i) % 7])
-
-    write_2D_array("CoverRequirements", big)
-    print(total)
+            
+            d = x.find('Day').text
+            day = day_string_to_int(d)
+            shifts = SHIFT_TYPES[0:-1]
+            
+            for c in x.findall('Cover'):
+                shift = c.find('Shift').text
+                preferred = c.find('Preferred').text
+                index = shifts.index(shift)
+                shifts[index] = int(preferred)
+            
+            for i in range(NUM_DAYS):
+                if day_index_to_weekday(i) == day:
+                    total[i] = shifts
+    
+    write_2D_array("CoverRequirements", total)
 
 
 def unwanted_patterns():
@@ -479,7 +461,6 @@ def main():
     define_contracts()
     unwanted_patterns()
     cover_requirements()
-    cover_requirements2()
 
 main()
 
