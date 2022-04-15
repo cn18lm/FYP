@@ -252,6 +252,28 @@ def cover_requirements():
         big.append(week[(firstDay + i) % 7])
 
     write_2D_array("CoverRequirements", big)
+    
+def cover_requirements2():
+    # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
+    week = week_days.copy()
+    total = [[0]*NUM_DAYS]*(NUM_SHIFTS - 1)
+    for x in root.find('CoverRequirements'):
+        if x.tag == 'DayOfWeekCover':
+            day = SHIFT_TYPES[0:-1]
+            for y in x.findall('Cover'):
+                index = SHIFT_TYPES.index(y[0].text)
+                day[index] = y[1].text
+            index = week_days.index(x[0].text)
+            week[index] = day
+
+    big = []
+
+    firstDay = START_DATE.weekday()
+    for i in range(NUM_DAYS):
+        big.append(week[(firstDay + i) % 7])
+
+    write_2D_array("CoverRequirements", big)
+    print(total)
 
 
 def unwanted_patterns():
@@ -457,6 +479,7 @@ def main():
     define_contracts()
     unwanted_patterns()
     cover_requirements()
+    cover_requirements2()
 
 main()
 
