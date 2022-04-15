@@ -208,8 +208,10 @@ def shift_types():
     
     write_var('num_shifts', NUM_SHIFTS)
     write_set("shift_types", SHIFT_TYPES)
+    # write_set("shift_types_on", SHIFT_TYPES[0:-1])
+    # write_array("shift_types_array", SHIFT_TYPES);
     # write_array("shift_types", [x+1 for x in [*range(len(SHIFT_TYPES))]])
-    #write_array_of_sets("shift_skills", SHIFT_SKILLS)
+    # write_array_of_sets("shift_skills", SHIFT_SKILLS)
     
 
 
