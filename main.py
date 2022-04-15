@@ -154,6 +154,7 @@ NUM_SHIFTS = []
 
 EMPLOYEE_CONTRACTS = []
 EMPLOYEE_SKILLS = []
+NUM_EMPLOYEES = None
 
 
 def scheduling_period():
@@ -215,13 +216,15 @@ def shift_types():
 def employee_contracts():
     
     global EMPLOYEE_CONTRACTS
+    global NUM_EMPLOYEES
     
     for e in root.find('Employees'):
         contract = e.find('ContractID').text
         EMPLOYEE_CONTRACTS.append(int(contract)+1) # Adding 1 to make indices work
         
-    write_var('num_employees', len(EMPLOYEE_CONTRACTS))
+    NUM_EMPLOYEES = len(EMPLOYEE_CONTRACTS)
     
+    write_var('num_employees', NUM_EMPLOYEES)
     write_array('employee_contracts', EMPLOYEE_CONTRACTS)
     
 
@@ -241,7 +244,7 @@ def employee_skills():
 def cover_requirements():
     # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
     
-    total = total = [[0] * (NUM_SHIFTS - 1) for _ in range(NUM_DAYS)]
+    total = [[0] * (NUM_SHIFTS - 1) for _ in range(NUM_DAYS)]
     
     
     for x in root.find('CoverRequirements'):
@@ -280,12 +283,8 @@ def cover_requirements():
                 preferred = c.find('Preferred').text
                 total[day_index][shift_index] = int(preferred)
     
-    print(total)
-            
-            
-            
-    
-    write_2D_array("CoverRequirements", total)
+
+    write_2D_array("cover_requirements", total)
 
 
 def unwanted_patterns():
@@ -480,6 +479,84 @@ def max_weekends_consecutive_delta(m_):
 
 def min_weekends_consecutive_delta(m_):
     None
+    
+def day_on_requests():
+    
+    total = [[0] * (NUM_DAYS) for _ in range(NUM_EMPLOYEES)]
+    
+    if root.find('DayOnRequests') == None:
+        write_2D_array('day_on_requests', total)
+        return
+    
+    for d in root.find('DayOnRequests'):
+        ID = int(d.find('EmployeeID').text)
+        date = to_date(d.find('Date').text)
+        date_index = date_to_index(date)
+        total[ID][date_index] = 1
+    
+    write_2D_array('day_on_requests', total)
+    
+def day_off_requests():
+    total = [[0] * (NUM_DAYS) for _ in range(NUM_EMPLOYEES)]
+    
+    if root.find('DayOffRequests') == None:
+        write_2D_array('day_off_requests', total)
+        return
+    
+    for d in root.find('DayOffRequests'):
+        ID = int(d.find('EmployeeID').text)
+        date = to_date(d.find('Date').text)
+        date_index = date_to_index(date)
+        total[ID][date_index] = 1
+    
+    write_2D_array('day_off_requests', total)
+    
+    
+def shift_on_requests():
+    total_ = []
+    for s in SHIFT_TYPES[0:-1]:
+        
+        total = [[0] * (NUM_DAYS) for _ in range(NUM_EMPLOYEES)]
+        
+        if root.find('ShiftOnRequests') == None:
+            total_.append(total)
+        else:
+            for d in root.find('ShiftOnRequests'):
+                ID = int(d.find('EmployeeID').text)
+                date = to_date(d.find('Date').text)
+                date_index = date_to_index(date)
+                shift = d.find('ShiftTypeID').text
+                
+                if shift == s:
+                    total[ID][date_index] = 1
+            total_.append(total)
+     
+    combined, indices = combine_lists(total_)
+    write_2D_array('shift_on_request_indices' , indices)
+    write_2D_array('shift_on_requests' , combined)
+
+def shift_off_requests():
+    total_ = []
+    for s in SHIFT_TYPES[0:-1]:
+        
+        total = [[0] * (NUM_DAYS) for _ in range(NUM_EMPLOYEES)]
+        
+        if root.find('ShiftOffRequests') == None:
+            total_.append(total)
+        else:
+            for d in root.find('ShiftOffRequests'):
+                ID = int(d.find('EmployeeID').text)
+                date = to_date(d.find('Date').text)
+                date_index = date_to_index(date)
+                shift = d.find('ShiftTypeID').text
+                
+                if shift == s:
+                    total[ID][date_index] = 1
+            total_.append(total)
+     
+    combined, indices = combine_lists(total_)
+    write_2D_array('shift_off_request_indices' , indices)
+    write_2D_array('shift_off_requests' , combined)
 
 def main():
     scheduling_period()
@@ -491,6 +568,12 @@ def main():
     define_contracts()
     unwanted_patterns()
     cover_requirements()
+    
+    day_on_requests()
+    day_off_requests()
+    shift_on_requests()
+    shift_off_requests()
+    
 
 main()
 
