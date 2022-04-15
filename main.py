@@ -241,7 +241,8 @@ def employee_skills():
 def cover_requirements():
     # NEED TO REDO AND ADD SPECIFIC DAYS/SHIFTS
     
-    total = [[0]*(NUM_SHIFTS - 1)]*NUM_DAYS
+    total = total = [[0] * (NUM_SHIFTS - 1) for _ in range(NUM_DAYS)]
+    
     
     for x in root.find('CoverRequirements'):
         
@@ -259,13 +260,28 @@ def cover_requirements():
             
             for i in range(NUM_DAYS):
                 if day_index_to_weekday(i) == day:
-                    total[i] = shifts
+                    total[i] = shifts.copy()
+                    
+
+    for x in root.find('CoverRequirements'):
         
         if x.tag == 'DateSpecificCover':
             
             d = x.find('Date').text
             date = to_date(d)
-            index = date_to_index(date)
+            day_index = date_to_index(date)
+            
+            shifts = SHIFT_TYPES[0:-1]
+            
+            for c in x.findall('Cover'):
+
+                shift = c.find('Shift').text
+                shift_index = shifts.index(shift)
+                preferred = c.find('Preferred').text
+                total[day_index][shift_index] = int(preferred)
+    
+    print(total)
+            
             
             
     
