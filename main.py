@@ -36,11 +36,11 @@ def date_to_index(d):
     return delta.days
 
 def write_comment(c):
-    f.write("% " + c + "\n")
+    f.write("% " + c + ";\n")
 
 
 def write_var(name, value):
-    f.write(name + " = " + str(value) + "\n")
+    f.write(name + " = " + str(value) + ";\n")
 
 
 def write_set(name, list_):
@@ -53,7 +53,7 @@ def write_set(name, list_):
         else:
             f.write(", " + str(item))
 
-    f.write("}\n")
+    f.write("};\n")
 
 def write_array(name, list_):
     f.write(name + " = [")
@@ -65,7 +65,7 @@ def write_array(name, list_):
         else:
             f.write(", " + str(item))
 
-    f.write("]\n")
+    f.write("];\n")
     
 
 def day_string_to_int(d):
@@ -73,7 +73,7 @@ def day_string_to_int(d):
 
 
 def write_2D_array(name, list_):
-    f.write(name + " = [\n|")
+    f.write(name + " = [|")
     for i in list_:
         first = True
         for j in i:
@@ -83,7 +83,7 @@ def write_2D_array(name, list_):
             else:
                 f.write(", " + str(j))
         f.write("\n|")
-    f.write("] \n")
+    f.write("]; \n")
 
 
 def write_array_of_sets(name, list_):
@@ -103,7 +103,7 @@ def write_array_of_sets(name, list_):
             else:
                 f.write(", " + str(j))
         f.write("}")
-    f.write("]\n")
+    f.write("];\n")
     
 
 def combine_lists(list_):
@@ -182,7 +182,7 @@ def skills():
     global SKILLS
     for child in root.find('Skills'):
         SKILLS.append(child.text)
-    write_set("skills", SKILLS)
+    #write_set("skills", SKILLS)
 
 
 
@@ -208,7 +208,8 @@ def shift_types():
     
     write_var('num_shifts', NUM_SHIFTS)
     write_set("shift_types", SHIFT_TYPES)
-    write_array_of_sets("shift_skills", SHIFT_SKILLS)
+    # write_array("shift_types", [x+1 for x in [*range(len(SHIFT_TYPES))]])
+    #write_array_of_sets("shift_skills", SHIFT_SKILLS)
     
 
 
@@ -232,13 +233,24 @@ def employee_skills():
     
     global EMPLOYEE_SKILLS
     
+    total = []
+    
     for e in root.find('Employees'): 
         theirskills = []
         for s in e.find('Skills'):
             theirskills.append(s.text)
         EMPLOYEE_SKILLS.append(theirskills)
+        
+        acceptable_shifts = []
+        for i in range(len(SHIFT_TYPES)):
+            for j in SHIFT_SKILLS[i]:
+                if j in theirskills:
+                    acceptable_shifts.append(SHIFT_TYPES[i])
+                    break
+                
+        total.append(acceptable_shifts)
     
-    write_array_of_sets('employee_skills', EMPLOYEE_SKILLS)
+    write_array_of_sets('acceptable_shifts', total)
     
 
 def cover_requirements():
@@ -361,6 +373,11 @@ def unwanted_patterns():
     write_2D_array('unwanted_patterns_delta' , combined)
 
 
+
+
+
+"""---------- Contracts ----------"""
+
 def define_contracts():
     max_num_assignments = []
     min_num_assignments = []
@@ -480,6 +497,10 @@ def max_weekends_consecutive_delta(m_):
 def min_weekends_consecutive_delta(m_):
     None
     
+    
+    
+"""----- day/shift on/off requests -----"""
+
 def day_on_requests():
     
     total = [[0] * (NUM_DAYS) for _ in range(NUM_EMPLOYEES)]
@@ -557,6 +578,9 @@ def shift_off_requests():
     combined, indices = combine_lists(total_)
     write_2D_array('shift_off_request_indices' , indices)
     write_2D_array('shift_off_requests' , combined)
+
+
+
 
 def main():
     scheduling_period()
