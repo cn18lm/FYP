@@ -488,6 +488,43 @@ def min_free_consecutive_delta(m_):
     
     print(delta)
     
+def max_total_weekends(m_, weekend):
+    delta = []
+    
+    indices = [*range(m_)]
+    
+    for i in indices:
+        for j in range(7):
+            row = []
+            if j == weekend[0]:
+                for k in range(len(SHIFT_TYPES) - 1):
+                    if i == indices[-1]:
+                        row.append(0)
+                    else:
+                        row.append(7*m_ + i + 1)
+                row.append((j + 1 )%7 + 1 + 7 * i)
+            
+            elif j == weekend[1]:
+                for k in range(len(SHIFT_TYPES) - 1):
+                    if i == indices[-1]:
+                        row.append(0)
+                    else:
+                        row.append((j + 1 )%7 + 1 + 7 * (i+1))
+                row.append((j + 1 )%7 + 1 + 7 * i)
+            
+            else:
+                for k in range(len(SHIFT_TYPES)):
+                    row.append((j + 1 )%7 + 1 + 7 * i)
+                    
+            delta.append(row)
+    
+    for i in indices[0:-1]:
+        row = []
+        for k in range(len(SHIFT_TYPES)):
+            row.append((weekend[1] + 1 )%7 + 1 + 7 * (i+1))
+        delta.append(row)
+    print(delta)
+    
 def max_weekends_consecutive_delta(m_):
     None
 
