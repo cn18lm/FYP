@@ -10,6 +10,8 @@ acceptable_shifts = [{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, 
 max_num_assignments = [16, 12, 5];
 min_num_assignments = [6, 6, 3];
 weekends_per_contract = [{2, 9, 16, 23},{3, 10, 17, 24},{2, 9, 16, 23},{3, 10, 17, 24},{2, 9, 16, 23},{3, 10, 17, 24}];
+complete_weekends = [true, true, true];
+identical_shift_weekend = [true, true, true];
 max_consecutive_working = [| 1, 28
 | 29, 56
 | 57, 84

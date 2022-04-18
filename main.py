@@ -392,6 +392,10 @@ def define_contracts():
     # used for CompleteWeekends and IdenticalShiftTypesDuringWeekend
     weekends_per_contract = []
     
+    complete_weekends = []
+    
+    identical_shift_weekend = []
+    
     for contract in root.find('Contracts'):
         ID = int(contract.attrib['ID'])+1
         
@@ -445,10 +449,19 @@ def define_contracts():
         m = int(contract.find('MinConsecutiveWorkingWeekends').text)
         min_consecutive_weekends_parts.append(min_weekends_consecutive_delta(m, weekend_list_int))
         
+        w = contract.find('CompleteWeekends').text
+        complete_weekends.append(w)
+        
+        w = contract.find('IdenticalShiftTypesDuringWeekend').text
+        identical_shift_weekend.append(w)
+        
     
     write_array('max_num_assignments', max_num_assignments)
     write_array('min_num_assignments', min_num_assignments)
     write_array_of_sets('weekends_per_contract', weekends_per_contract)
+    
+    write_array('complete_weekends', complete_weekends)
+    write_array('identical_shift_weekend', identical_shift_weekend)
     
     a,b = combine_lists(max_consecutive_working_parts)
     write_2D_array('max_consecutive_working', b)
