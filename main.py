@@ -156,6 +156,8 @@ EMPLOYEE_CONTRACTS = []
 EMPLOYEE_SKILLS = []
 NUM_EMPLOYEES = None
 
+NUM_CONTRACTS = []
+
 
 def scheduling_period():
     write_comment(SCHEDULING_PERIOD)
@@ -366,8 +368,10 @@ def unwanted_patterns():
         all_delta.append(delta)
     
     combined, adindices = combine_lists(all_delta)
+    write_var('num_unwanted_patterns', len(adindices))
     write_2D_array('unwanted_patterns' , adindices)
     write_2D_array('unwanted_patterns_delta' , combined)
+
 
 
 
@@ -376,27 +380,39 @@ def unwanted_patterns():
 """---------- Contracts ----------"""
 
 def define_contracts():
+    
+    global NUM_CONTRACTS
+    
     max_num_assignments = []
     min_num_assignments = []
     
     max_consecutive_working_parts = []
+    max_consecutive_working_weights = []
     min_consecutive_working_parts = []
+    min_consecutive_working_weights = []
 
     max_consecutive_free_parts = []
+    max_consecutive_free_weights = []
     min_consecutive_free_parts = []
+    min_consecutive_free_weights = []
 
     max_consecutive_weekends_parts = []
+    max_consecutive_weekends_weights = []
     min_consecutive_weekends_parts = []
+    min_consecutive_weekends_weights = []
+    
     max_total_weekends_parts = []
+    max_total_weekends_weights = []
     
     # used for CompleteWeekends and IdenticalShiftTypesDuringWeekend
     weekends_per_contract = []
     
     complete_weekends = []
-    
+
     identical_shift_weekend = []
     
     for contract in root.find('Contracts'):
+        # Need to ignore if weight = 0
         ID = int(contract.attrib['ID'])+1
         
         # Weekend is defined in contract by a string of days
@@ -428,26 +444,49 @@ def define_contracts():
         m = int(contract.find('MinNumAssignments').text)
         min_num_assignments.append(m)
         
+        
+        m = contract.find('MaxConsecutiveWorkingDays')
+        w = int(m.attrib["on"])
+        max_consecutive_working_weights.append(w)
         m = int(contract.find('MaxConsecutiveWorkingDays').text)
         max_consecutive_working_parts.append(max_working_consecutive_delta(m))
         
+        m = contract.find('MinConsecutiveWorkingDays')
+        w = int(m.attrib["on"])
+        min_consecutive_working_weights.append(w)
         m = int(contract.find('MinConsecutiveWorkingDays').text)
         min_consecutive_working_parts.append(min_working_consecutive_delta(m))
         
+        m = contract.find('MaxConsecutiveFreeDays')
+        w = int(m.attrib["on"])
+        max_consecutive_free_weights.append(w)
         m = int(contract.find('MaxConsecutiveFreeDays').text)
         max_consecutive_free_parts.append(max_free_consecutive_delta(m))
         
+        m = contract.find('MinConsecutiveFreeDays')
+        w = int(m.attrib["on"])
+        min_consecutive_free_weights.append(w)
         m = int(contract.find('MinConsecutiveFreeDays').text)
         min_consecutive_free_parts.append(min_free_consecutive_delta(m))
         
+        m = contract.find('MaxWorkingWeekendsInFourWeeks')
+        w = int(m.attrib["on"])
+        max_total_weekends_weights.append(w)
         m = int(contract.find('MaxWorkingWeekendsInFourWeeks').text)
         max_total_weekends_parts.append(max_total_weekends(m, weekend_list_int))
         
+        m = contract.find('MaxConsecutiveWorkingWeekends')
+        w = int(m.attrib["on"])
+        max_consecutive_weekends_weights.append(w)
         m = int(contract.find('MaxConsecutiveWorkingWeekends').text)
         max_consecutive_weekends_parts.append(max_weekends_consecutive_delta(m, weekend_list_int))
         
+        m = contract.find('MinConsecutiveWorkingWeekends')
+        w = int(m.attrib["on"])
+        min_consecutive_weekends_weights.append(w)
         m = int(contract.find('MinConsecutiveWorkingWeekends').text)
         min_consecutive_weekends_parts.append(min_weekends_consecutive_delta(m, weekend_list_int))
+        
         
         w = contract.find('CompleteWeekends').text
         complete_weekends.append(w)
@@ -455,41 +494,51 @@ def define_contracts():
         w = contract.find('IdenticalShiftTypesDuringWeekend').text
         identical_shift_weekend.append(w)
         
+    NUM_CONTRACTS = len(max_num_assignments)
+    write_var('num_contracts', NUM_CONTRACTS)
     
     write_array('max_num_assignments', max_num_assignments)
     write_array('min_num_assignments', min_num_assignments)
     write_array_of_sets('weekends_per_contract', weekends_per_contract)
     
+
     write_array('complete_weekends', complete_weekends)
     write_array('identical_shift_weekend', identical_shift_weekend)
     
     a,b = combine_lists(max_consecutive_working_parts)
     write_2D_array('max_consecutive_working', b)
     write_2D_array('max_consecutive_working_delta', a)
+    write_array('max_consecutive_working_weights', max_consecutive_working_weights)
     
     a,b = combine_lists(min_consecutive_working_parts)
     write_2D_array('min_consecutive_working', b)
     write_2D_array('min_consecutive_working_delta', a)
+    write_array('min_consecutive_working_weights', min_consecutive_working_weights)
     
     a,b = combine_lists(max_consecutive_free_parts)
     write_2D_array('max_consecutive_free', b)
     write_2D_array('max_consecutive_free_delta', a)
+    write_array('max_consecutive_free_weights', max_consecutive_free_weights)
     
     a,b = combine_lists(min_consecutive_free_parts)
     write_2D_array('min_consecutive_free', b)
     write_2D_array('min_consecutive_free_delta', a)
+    write_array('min_consecutive_free_weights',min_consecutive_free_weights)
     
     a,b = combine_lists(max_total_weekends_parts)
     write_2D_array('max_total_weekends', b)
     write_2D_array('max_total_weekends_delta', a)
+    write_array('max_total_weekends_weights',max_total_weekends_weights)
     
     a,b = combine_lists(max_consecutive_weekends_parts)
     write_2D_array('max_consecutive_weekends', b)
     write_2D_array('max_consecutive_weekends_delta', a)
+    write_array('max_consecutive_weekends_weights',max_consecutive_weekends_weights)
     
     a,b = combine_lists(min_consecutive_weekends_parts)
     write_2D_array('min_consecutive_weekends', b)
     write_2D_array('min_consecutive_weekends_delta', a)
+    write_array('min_consecutive_weekends_weights',min_consecutive_weekends_weights)
 
 
     
@@ -567,6 +616,19 @@ def min_free_consecutive_delta(m_):
     
 def max_total_weekends(m_, weekend):
     delta = []
+    
+    if m_ == 0:
+        for j in range(7):
+            row = []
+            if j in weekend:
+                for k in range(len(SHIFT_TYPES) - 1):
+                    row.append(0)
+                row.append((j + 1 )%7 + 1)
+            else:
+                for k in range(len(SHIFT_TYPES)):
+                    row.append((j + 1 )%7 + 1)
+            delta.append(row)
+        return(delta)
     
     indices = [*range(m_)]
     

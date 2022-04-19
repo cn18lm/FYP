@@ -7,6 +7,7 @@ shift_types = {E, L, D, N, DH, ZZ};
 num_employees = 49;
 employee_contracts = [1, 1, 2, 2, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
 acceptable_shifts = [{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ}];
+num_contracts = 3;
 max_num_assignments = [16, 12, 5];
 min_num_assignments = [6, 6, 3];
 weekends_per_contract = [{2, 9, 16, 23},{3, 10, 17, 24},{2, 9, 16, 23},{3, 10, 17, 24},{2, 9, 16, 23},{3, 10, 17, 24}];
@@ -101,6 +102,7 @@ max_consecutive_working_delta = [| 2, 2, 2, 2, 2, 1
 | 28, 28, 28, 28, 28, 1
 | 29, 29, 29, 29, 29, 1
 |]; 
+max_consecutive_working_weights = [1, 1, 1];
 min_consecutive_working = [| 1, 28
 | 29, 56
 | 57, 84
@@ -190,6 +192,7 @@ min_consecutive_working_delta = [| 2, 2, 2, 2, 2, 1
 | 28, 28, 28, 28, 28, 0
 | 29, 29, 29, 29, 29, 0
 |]; 
+min_consecutive_working_weights = [1, 1, 1];
 max_consecutive_free = [| 1, 28
 | 29, 56
 | 57, 84
@@ -279,6 +282,7 @@ max_consecutive_free_delta = [| 1, 1, 1, 1, 1, 2
 | 1, 1, 1, 1, 1, 28
 | 1, 1, 1, 1, 1, 29
 |]; 
+max_consecutive_free_weights = [1, 1, 1];
 min_consecutive_free = [| 1, 28
 | 29, 56
 | 57, 84
@@ -368,11 +372,34 @@ min_consecutive_free_delta = [| 1, 1, 1, 1, 1, 2
 | 0, 0, 0, 0, 0, 28
 | 0, 0, 0, 0, 0, 29
 |]; 
-max_total_weekends = [| 1, 0
-| 1, 0
-| 1, 0
+min_consecutive_free_weights = [1, 1, 1];
+max_total_weekends = [| 1, 7
+| 8, 14
+| 15, 21
 |]; 
-max_total_weekends_delta = [|]; 
+max_total_weekends_delta = [| 2, 2, 2, 2, 2, 2
+| 3, 3, 3, 3, 3, 3
+| 4, 4, 4, 4, 4, 4
+| 5, 5, 5, 5, 5, 5
+| 6, 6, 6, 6, 6, 6
+| 0, 0, 0, 0, 0, 7
+| 0, 0, 0, 0, 0, 1
+| 2, 2, 2, 2, 2, 2
+| 3, 3, 3, 3, 3, 3
+| 4, 4, 4, 4, 4, 4
+| 5, 5, 5, 5, 5, 5
+| 6, 6, 6, 6, 6, 6
+| 0, 0, 0, 0, 0, 7
+| 0, 0, 0, 0, 0, 1
+| 2, 2, 2, 2, 2, 2
+| 3, 3, 3, 3, 3, 3
+| 4, 4, 4, 4, 4, 4
+| 5, 5, 5, 5, 5, 5
+| 6, 6, 6, 6, 6, 6
+| 0, 0, 0, 0, 0, 7
+| 0, 0, 0, 0, 0, 1
+|]; 
+max_total_weekends_weights = [0, 0, 0];
 max_consecutive_weekends = [| 1, 55
 | 56, 94
 | 95, 133
@@ -511,6 +538,7 @@ max_consecutive_weekends_delta = [| 2, 2, 2, 2, 2, 2
 | 22, 22, 22, 22, 22, 22
 | 29, 29, 29, 29, 29, 29
 |]; 
+max_consecutive_weekends_weights = [0, 0, 0];
 min_consecutive_weekends = [| 1, 16
 | 17, 32
 | 33, 56
@@ -572,6 +600,8 @@ min_consecutive_weekends_delta = [| 2, 2, 2, 2, 2, 2
 | 15, 15, 15, 15, 15, 15
 | 15, 15, 15, 15, 15, 15
 |]; 
+min_consecutive_weekends_weights = [0, 0, 0];
+num_unwanted_patterns = 3;
 unwanted_patterns = [| 1, 14
 | 15, 35
 | 36, 56
