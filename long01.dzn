@@ -3,7 +3,7 @@
 % END_DATE: 2010-01-28;
 num_days = 28;
 num_shifts = 6;
-shift_types = {E, L, D, N, DH, ZZ};
+shift_types = {1,2,3,4,5,6};
 num_employees = 49;
 employee_contracts = [1, 1, 2, 2, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
 acceptable_shifts = [{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, DH, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ},{E, L, D, N, ZZ}];

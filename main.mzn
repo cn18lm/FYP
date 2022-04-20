@@ -1,10 +1,13 @@
 % Initializing all the variables from datafile ====================
+include "long01.dzn";
+include "soft_constraints/minibrass.mzn";
+include "main_o.mzn";
 int: num_days;
 int: num_employees;
 int: num_shifts;
 int: num_contracts;
 
-enum shift_types;
+set of int: shift_types;
 
 array[1..num_employees] of set of shift_types: acceptable_shifts;
 
@@ -81,13 +84,9 @@ constraint forall(i in 1..num_employees)(
 constraint forall(j in 1..num_days)(
     forall(s in shift_types)(
         if s < num_shifts then
-        sum(i in 1..num_employees)(roster[i,j] == s) == cover_requirements[j , s] endif
-));
+        sum(i in 1..num_employees)(roster[i,j] == s) == cover_requirements[j , s] else none endif));
 
-
-
- solve satisfy;
-
+solve satisfy;
 
 
  output [ show(roster[i,j]) ++ if j==num_days then "\n" else " " endif

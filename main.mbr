@@ -1,0 +1,11 @@
+include "defs.mbr";
+
+
+PVS: user1Prefs = new WeightedCsp("user1Prefs") {
+    % Max num assignments
+    soft-constraint c1: 'forall(i in 1..num_employees)(
+        sum(j in 1..num_days)(roster[i,j] != num_shifts) <= max_num_assignments[employee_contracts[i]])' :: weights('1');
+};
+
+
+solve user1Prefs;
