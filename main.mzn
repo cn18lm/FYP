@@ -85,6 +85,27 @@ constraint forall(j in 1..num_days)(
     forall(s in shift_types)(
         if s < num_shifts then
         sum(i in 1..num_employees)(roster[i,j] == s) == cover_requirements[j , s] else none endif));
+        
+%dayonrequests
+
+constraint forall(i in 1..num_employees)(
+  forall(j in 1..num_days)(
+    if day_on_requests[i,j] == 1 then
+    roster[i,j] != num_shifts else none endif
+));
+
+%shiftonrequests
+constraint forall(i in 1..num_employees)(
+  forall(j in 1..num_days)(
+    roster[i,j] = shift_on_requests[i,j]
+));
+
+%shiftoffrequests
+constraint forall(i in 1..num_employees)(
+  forall(j in 1..num_days)(
+    roster[i,j] in shift_off_requests[i,j]
+));
+
 
 solve satisfy;
 
