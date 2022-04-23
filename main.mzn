@@ -97,7 +97,7 @@ constraint forall(i in 1..num_employees)(
 %shiftonrequests
 constraint forall(i in 1..num_employees)(
   forall(j in 1..num_days)(
-    roster[i,j] = shift_on_requests[i,j]
+    roster[i,j] in shift_on_requests[i,j]
 ));
 
 %shiftoffrequests
@@ -105,6 +105,11 @@ constraint forall(i in 1..num_employees)(
   forall(j in 1..num_days)(
     roster[i,j] in shift_off_requests[i,j]
 ));
+
+%max num assignments
+constraint forall(i in 1..num_employees)(
+  sum(j in 1..num_days)(roster[i,j] != num_shifts) <= max_num_assignments[employee_contracts[i]] 
+);
 
 
 solve satisfy;
