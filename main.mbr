@@ -1,5 +1,7 @@
 include "defs.mbr";
 
+% DOES NOT WORK
+
 
 PVS: user1Prefs = new WeightedCsp("user1Prefs") {
     % Max num assignments
