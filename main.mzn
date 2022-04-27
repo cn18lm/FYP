@@ -1,3 +1,5 @@
+% Not all constraints are implemented
+
 % Initializing all the variables from datafile ====================
 include "long01.dzn";
 include "soft_constraints/minibrass.mzn";
@@ -86,6 +88,10 @@ constraint forall(j in 1..num_days)(
         if s < num_shifts then
         sum(i in 1..num_employees)(roster[i,j] == s) == cover_requirements[j , s] else none endif));
         
+        
+% ====================================================================
+% Soft Constraints
+        
 %dayonrequests
 
 constraint forall(i in 1..num_employees)(
@@ -110,6 +116,36 @@ constraint forall(i in 1..num_employees)(
 constraint forall(i in 1..num_employees)(
   sum(j in 1..num_days)(roster[i,j] != num_shifts) <= max_num_assignments[employee_contracts[i]] 
 );
+
+predicate iscomplete(var int: i, var set of int: s) = roster[i,s[1]] == num_shifts <-> roster[i,s[2]] == num_shifts;
+
+%complete weekends
+constraint forall(i in 1..num_employees)(
+  forall(j in 1..num_days)(
+    if complete_weekends[employee_contracts[i]] == true then
+      forall(k in 1..l)(
+        if card(weekends_per_contract[employee_contracts[i],k]) > 1 then
+          iscomplete(i,weekends_per_contract[employee_contracts[i],k])
+else none endif)
+else none endif
+
+));
+
+predicate isidentical(var int: i, var set of int: s)
+= roster[i,s[1]] == roster[i,s[2]];
+
+%identical weekends
+constraint forall(i in 1..num_employees)(
+  forall(j in 1..num_days)(
+    if identical_shift_weekend[employee_contracts[i]] == true then
+      forall(k in 1..l)(
+        if card(weekends_per_contract[employee_contracts[i],k]) > 1 then
+          isidentical(i,weekends_per_contract[employee_contracts[i],k])
+else none endif)
+else none endif
+));
+
+
 
 
 solve satisfy;
